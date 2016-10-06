@@ -24,9 +24,9 @@ We are analyzing a set of 200 observations across 4 variables: the target, `Sale
 
 We can do a preliminary visual exploration of the two relevant variables, `TV` and `Sales', to get a sense of their distributions (See Figures 1 and 2 on Page 2).
 
-![The distribution of sales across markets looks approximately normal.](images/histogram-sales.png)
+![The distribution of sales across markets looks approximately normal.](../images/histogram-sales.png)
 
-![Spending on TV advertising looks fairly uniform.](images/histogram-tv.png)
+![Spending on TV advertising looks fairly uniform.](../images/histogram-tv.png)
 
 We now proceed to modeling the relationship between the two variables.
 
@@ -49,7 +49,7 @@ $\beta_{0}$ is simply an intercept which translates the line of best fit. $\beta
 We compute the linear model with `lm(Sales ~ TV)` to perform inference:
 
 ```{r, echo=FALSE}
-load("data/regression.Rdata")
+load("../data/regression.Rdata")
 library(pander)
 panderOptions("digits", 2)
 pander(fit, caption = "Summary of Linear Regression Model of TV on Sales")
@@ -59,7 +59,7 @@ As mentioned before, we are particularly interested in $\beta_{1}$ and its signf
 
 We will now evaluate how well the model fits the data. We can perform a scatterplot to get a visual impression of their relationship, and we will plot our linear model on top to see how accurate our model seems.
 
-![Scatterplot of TV and Sales, with regression line](images/scatterplot-tv-sales.png)
+![Scatterplot of TV and Sales, with regression line](../images/scatterplot-tv-sales.png)
 
 We can see that the relationship is positive, but clearly non-linear. The data is heteroskedastic and looks more like a log function than a linear one. However, our linear model may still be useful for interpretation. We compute some other goodness-of-fit statistics to evaluate how far off our model is.
 
@@ -67,7 +67,7 @@ We can see that the relationship is positive, but clearly non-linear. The data i
 Rsq <- summ$r.squared
 RSE <- summ[[6]]
 fstat <- summ$fstatistic['value']
-Statistic <- c("R-squared", "Residual Etandard Error", "F-statistic")
+Statistic <- c("R-squared", "Residual Standard Error", "F-statistic")
 Value <- c(Rsq, RSE, fstat)
 fit_table <- data.frame(Statistic, Value)
 pander(fit_table, caption="Goodness of Fit Statistics")

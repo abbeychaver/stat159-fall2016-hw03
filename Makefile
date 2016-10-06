@@ -1,5 +1,5 @@
 
-all: eda-output.txt regression.Rdata report.pdf
+all: eda-output.txt regression.Rdata report.html
 
 data: 
 	curl -O http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv
@@ -7,8 +7,8 @@ data:
 clean:
 	rm report/report.pdf
 
-report.pdf:
-	Rscript -e "library(knitr); knit('report/report.Rmd')"
+report.html:
+	Rscript -e "rmarkdown::render('report/report.Rmd')"
 
 regression.Rdata: code/regression-script.R data/Advertising.csv
 	Rscript code/regression-script.R
