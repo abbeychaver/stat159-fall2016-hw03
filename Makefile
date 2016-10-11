@@ -1,17 +1,21 @@
 
-all: eda-output.txt regression.Rdata report.html
+all: eda report regression
 
-data: 
-	curl -O http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv
+data:
+	curl -o data/Advertising.csv http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv
 
 clean:
 	rm report/report.pdf
+tests:
+	Rscript code/test-that.R
 
-report.html:
+
+report: report/report.Rmd regression
 	Rscript -e "rmarkdown::render('report/report.Rmd')"
 
-regression.Rdata: code/regression-script.R data/Advertising.csv
-	Rscript code/regression-script.R
+regression: code/scripts/regression-script.R data/Advertising.csv
+	Rscript code/scripts/regression-script.R
 
-eda-output.txt: code/eda-script.R data/Advertising.csv
-	Rscript code/eda-script.R
+eda: code/scripts/eda-script.R data/Advertising.csv
+	Rscript session-info-script.R
+	Rscript code/scripts/eda-script.R
