@@ -17,5 +17,5 @@ regression: code/scripts/regression-script.R data/Advertising.csv
 	Rscript code/scripts/regression-script.R
 
 eda: code/scripts/eda-script.R data/Advertising.csv
-	Rscript session-info-script.R
+	Rscript code/scripts/session-info-script.R
 	Rscript code/scripts/eda-script.R
