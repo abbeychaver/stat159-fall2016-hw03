@@ -89,6 +89,7 @@ We first consider $\beta_{1}$ and its signficance. While the coefficient seems s
 We compute some other goodness-of-fit statistics to evaluate how far off our model is.
 
 ``` {r, echo = FALSE}
+#source("code/functions/regression-functions.R")
 rss <- function(fit){
   sum(fit$residuals^2)
 }

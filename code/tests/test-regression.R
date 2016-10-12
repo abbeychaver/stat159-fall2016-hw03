@@ -1,38 +1,49 @@
-# Returns residual sum of squares - the larger this value, the worse the fit of the model
-# Takes an lm object as an input and returns a double
-rss <- function(fit){
-  sum(fit$residuals^2)
-}
+source("../functions/regression-functions.R")
+set.seed(123)
+norm1 <- rnorm(100, 2, 1)
+norm2 <- norm1*2
+fit_2x <- lm(norm2 ~ norm1)
 
-# Returns Rsquared, a measure of how much of the variance in the data is explained by the model
-# Takes and lm object as an input and returns a double between 0 and 1
-rsq <- function(fit) {
-  summary(fit)$r.squared
-}
+context("Testing whether rss works")
+test_that("rss function works as expected", {
+  expect_equal(round(rss(fit_2x), 2), 0)
+  expect_type(rss(fit_2x), 'double')
+  expect_length(rss(fit_2x), 1)
+})
 
-# Returns the total sum of squares, a measure of the total variance in the data (regardless of the model)
-# Takes an lm object as an input and returns a double
-tss <- function(fit) {
-  #sum(anova(fit)$"Sum Sq")
-  RSQ <- rsq(fit)
-  RSS <- rss(fit)
-  if (round(RSQ, 4) == 0) {
-    return(RSS)
-  }
-  else {
-    return(RSS/(1 - RSQ))
-  }
-}
+norm3 <- rnorm(100, 0, 0.3)
+target <- norm1*2 + norm3
+fit_2xe <- lm(target ~ norm3)
 
-# Returns the F statistic of the model, a measure of how likely it is that the model coefficients are not 0
-# Takes an lm object as an input and returns a double
-# F value should be compared to a F distribution table to assess significance
-fstat <- function(fit) {
-  summary(fit)$fstatistic['value']
-}
+context("Testing whether tss works")
+test_that("tss works as expected", {
+  expect_equal(tss(fit_2xe), sum(anova(fit_2xe)$"Sum Sq"))
+  expect_type(tss(fit_2xe), 'double')
+  expect_length(tss(fit_2xe), 1)
+})
 
-# Returns the residual standard error, a measure of goodness of fit
-rse <- function(fit) {
-  summary(fit)[[6]]
-}
+context("Testing whether Rsquared works")
+test_that("rsq works as expected", {
+  expect_equal(round(rsq(fit_2xe), 3), round((1 - rss(fit_2xe)/tss(fit_2xe)), 3))
+  expect_gte(rsq(fit_2xe), 0)
+  expect_lte(rsq(fit_2xe), 1)
+  expect_type(rsq(fit_2xe), 'double')
+  expect_length(rsq(fit_2xe), 1)
+})
+
+context("Testing whether F-statistic works")
+test_that("fstat works as expected", {
+  expect_type(fstat(fit_2xe), "double")
+  expect_length(fstat(fit_2xe), 1)
+  fst = ((tss(fit_2xe) - rss(fit_2xe))/1)/(tss(fit_2xe)/(100-2))
+  expect_equivalent((round(fstat(fit_2xe), 1))['value'], round(fst, 1)[1])
+})
+
+context("Testing whether residual standard error works")
+test_that("rse works as expected", {
+  expect_type(rse(fit_2xe), "double")
+  expect_length(rse(fit_2xe), 1)
+  RSE <- sqrt(rss(fit_2xe)/(100-2))
+  expect_equal(rse(fit_2xe), RSE)
+})
 
